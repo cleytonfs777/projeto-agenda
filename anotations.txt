@@ -1,0 +1,3 @@
+include = inserir arquivos parciais normalmente da pasta partial
+extends = Puxa um arquivo base e usa os blocks
+
