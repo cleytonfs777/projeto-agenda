@@ -1,3 +1,119 @@
+# Criar um projeto Django
+
+django-admin startproject < nome_do_projeto > .
+
+# Para startar um servidor para rodar local meus apps
+
+python manage.py runserver
+
+se quiser mudar a porta para 8888=> python manage.py runserver 8888
+
+
+# Para iniciar um app
+python manage.py startapp blog
+
+# Apos a criação é necessário registrar o app no arquivo settings.py do projeto principal da seguinte forma:
+=> '{ nome do app }.app.{nome do app plural}Config'
+ex:. Criado um app chamado contatos -> 'contatos.app.ContatosConfig'
+
+# Logo após vamos as urls.py e vamos incluir as urls do app -> path('', include('contatos.urls')), ["NÃO PRECISA COLOCAR O .py]
+
+# Criar arquivo urls.py dentro da pasta do app ("contatos")
+
+# No arquivo de urls deve ser importado views. Dentro das urlpatterns, deve ser informado qual função do arquivo view deve ser executada quando for acessada determinada url. Pode ser dado um 'name' para a função index deve ser
+
+ex:. urlpatterns = [
+    path('', views.index, name='index')
+]
+
 include = inserir arquivos parciais normalmente da pasta partial
 extends = Puxa um arquivo base e usa os blocks
 
+# Quando chamamos a tag {% url 'index'%} ele irá chamar a view que contem esse nome no caso em questão será a raiz
+
+# falar que a pasta templates contem nossos assets e os arquivos estáticos =>
+
+'DIRS': [os.path.join(BASE_DIR, 'templates')]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'templates/static')
+]
+
+##########################################################################################################################################################################################################################################################
+
+BANCO DE DADOS
+
+1. Crie o seu model
+
+"""
+
+from django.db import models
+from django.utils import timezone
+
+class Categoria(models.Model):
+    nome = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.nome
+
+class Contato(models.Model):
+    nome = models.CharField(max_length=255)
+    sobrenome = models.CharField(max_length=255, blank=True)
+    telefone = models.CharField(max_length=255)
+    email = models.CharField(max_length=255, blank=True)
+    data_criacao = models.DateTimeField(default=timezone.now)
+    descriao = models.TextField(blank=True)
+    categoria = models.ForeignKey(Categoria, on_delete=models.DO_NOTHING)
+
+    def __str__(self):
+        return self.nome
+
+
+"""
+
+2. Mande fazer migrações ->
+    python manage.py makemigrations
+
+3. Mande migrar 
+    python manage.py migrate
+
+CRIANDO O ROOT(SUPER USER)
+
+user: cleytonbj
+password: 142924d0
+
+1. Digite no terminal ->
+   python manage.py createsuperuser
+
+2. No seu app realize o registro de seus models no modulo admin.py
+3. Importe todos os seus modulos
+4. Escreva -> admin.site.register(<--nome do model-->)
+
+"""
+
+from django.contrib import admin
+from .models import Categoria, Contato
+# Register your models here.
+
+class ContatoAdmin(admin.ModelAdmin):
+    list_display = ('id','nome', 'sobrenome','telefone','email', 'data_criacao', 'categoria')
+    list_display_links = ('id', 'nome', 'sobrenome')
+    # list_filter = ('nome', 'sobrenome')
+    list_per_page = 10
+    search_fields = ('nome', 'sobrenome', 'telefone')
+
+admin.site.register(Categoria)
+admin.site.register(Contato, ContatoAdmin)
+
+"""
+
+Salve e crie os elementos no site admin do DJANGO
+
+# Passando argumentos para a urls
+
+Se faz dentro da url
+=> urlpatterns = [
+    path('{tipo do dado: nome da chave}', views.index, name='index'),
+    path('<int:contato_id>', views.ver_contato, name='ver_contato'),
+]
+
+* Para passar um argumento pela url basta colocalo após a url
