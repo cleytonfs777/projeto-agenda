@@ -117,3 +117,20 @@ Se faz dentro da url
 ]
 
 * Para passar um argumento pela url basta colocalo após a url
+
+
+para odenar contatos => url
+
+contato.order_by('< seleciona o campo a ser escolhido >')
+
+ex:. contato.order_by('nome')
+
+ex:. contato.order_by('-nome') => o sinal menos faz com que seja ordenado em order decrescente
+
+
+adicionar imagens
+
+No arquivo urls do projeto
+
+from django.conf import Settings
+from django.conf.urls.static import static
