@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block 'content' %}
+<h1 class="mb-3 mt-3">Olá {{ user.first_name }} {{ user.last_name }}</h1>
+{% include 'partial/_messages.html'%}
+
+<p>
+    O seu nome de usuário é {{user}}.
+</p>
+{% endblock %}
